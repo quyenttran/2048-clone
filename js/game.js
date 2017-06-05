@@ -1,7 +1,19 @@
 var Game = function() {
-  this.board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-  this.rows = this.board.match(/.{1,4}/g)
-  this.columns = generateColumns()
+
+  this.board = [0,0,0,2,0,0,2,2,0,2,0,2,2,0,0,2]
+  this.rows = this.generateRows()
+  this.columns = this.generateColumns()
+}
+
+Game.prototype.generateRows = function() {
+  var arrays = [], size = 4;
+  arrays.push(this.board.slice(0,4))
+  arrays.push(this.board.slice(4,8))
+  arrays.push(this.board.slice(8,12))
+  arrays.push(this.board.slice(12,16))
+
+  console.log(arrays)
+  return arrays
 }
 
 Game.prototype.generateColumns = function() {
@@ -13,11 +25,11 @@ Game.prototype.generateColumns = function() {
     })
     columns.push(column)
   }
+  return columns
 }
 
 Game.prototype.toString = function() {
-  var newBoard = this.board.match(/.{1,4}/g)
-  return newBoard.join('\n')
+  return this.rows.join('\n')
 }
 
 Game.prototype.move = function(direction) {
@@ -28,76 +40,54 @@ Game.prototype.move = function(direction) {
 }
 
 Game.prototype.moveLeft = function() {
-  var newRows = [];
-  this.rows.forEach(row) {
-    var newRow = this.shiftNumbers(row)
-    newRows.unshift(newRow)
+  for(var i = 0; i < this.rows.length; i++){
+    this.rows[i] = this.collapse(this.rows[i].reverse()).reverse()
   }
-  this.board = newRows.join('')
+  this.regenerateBoardFromRows(this.rows)
 }
 
 Game.prototype.moveRight = function() {
-  var newRows = [];
-  this.rows.forEach(row) {
-    var newRow = this.shiftNumbers(row.reverse())
-    newRows.unshift(newRow)
+  for(var i = 0; i < this.rows.length; i++){
+    this.rows[i] = this.collapse(this.rows[i])
   }
-  this.board = newRows.join('')
+  this.regenerateBoardFromRows(this.rows)
 }
 
 Game.prototype.moveUp = function() {
-  var newColumns = []
-  this.columns.forEach(column) {
-      var newColumn = this.shiftNumbers(column)
-      newColumns.unshift(newColumn)
-    }
-  this.board = makeBoardFromColumns(newColumns).join('')
+  for(var i = 0; i < this.columns.length; i++){
+    this.columns[i] = this.collapse(this.columns[i].reverse()).reverse()
+  }
+  this.regenerateBoardFromColumns(this.columns)
 }
 
 Game.prototype.moveDown = function() {
-  var newColumns = []
-  this.columns.forEach(column) {
-      var newColumn = this.shiftNumbers(column.reverse())
-      newColumns.unshift(newColumn)
-    }
-  this.board = makeBoardFromColumns(newColumns).join('')
+  for(var i = 0; i < this.columns.length; i++){
+    this.columns[i] = this.collapse(this.columns[i])
+  }
+this.regenerateBoardFromColumns(this.columns)
 }
 
-
-Game.prototype.shiftNumbers = function(rowOrColumn) {
-  var zeroes = []
-  var newColumn = []
-  rowOrColumn.forEach(value, index) {
-    var gotAllZeroes = false
-    if (value === 0 && gotAllZeroes === false) {
-      zeroes.push(value)
-    }
-    else if (value === 0 && gotAllZeroes === true) {
-      newColumn.unshift(value)
-    }
-    else {
-      newColumn.unshift(value);
-      gotAllZeroes = true;
-    }
-  }
-  for (var i = 0; i < zeroes.length(); i++) {
-    newColumn.unshift(0)
-  }
-  return newColumn
+Game.prototype.regenerateBoardFromRows = function(rows) {
+  this.board = _.flatten(this.rows)
+  this.rows = this.generateRows()
+  this.columns = this.generateColumns()
+  this.visualizeBoard()
 }
 
-Game.prototype.makeBoardFromColumns = function(columns) {
-  var rows = []
+Game.prototype.regenerateBoardFromColumns = function(columns) {
+  var newRows = []
   for (var i = 0; i < 4; i++) {
     var row = []
     columns.forEach(function(column){
       row.push(column[i])
     })
-    rows.push(row)
+    newRows.push(row)
   }
+  this.board = _.flatten(newRows)
+  this.rows = this.generateRows()
+  this.columns = this.generateColumns()
+  this.visualizeBoard()
 }
-
-
 
 Game.prototype.collapse = function(row) {
   var zeroLessRow = _.reject(row, function(num){ return num === 0 })
@@ -117,4 +107,12 @@ Game.prototype.collapse = function(row) {
     finalRow.unshift(0)
   }
   return finalRow
+}
+
+Game.prototype.visualizeBoard = function() {
+  $board = $('.board')
+  this.board.forEach(function(cell, index) {
+    cellClass = 'div.cell' + index
+    $(cellClass).html(cell)
+  })
 }

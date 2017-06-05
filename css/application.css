@@ -1,0 +1,25 @@
+body {
+  font-family: 'Futura';
+  font-size: 32px;
+  font-weight: bolder;
+  color: white;
+}
+
+div.cell {
+  background-color: mediumseagreen;
+  display: inline-block;
+  border: solid 2px black;
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+div.board {
+  background-color: seagreen;
+  width: 500px;
+  height: 500px;
+}
+div.row {
+  width: 500px;
+  height: 125px;
+}
