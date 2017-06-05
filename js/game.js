@@ -1,5 +1,5 @@
 var Game = function() {
-  this.board = '2000000000000000'
+  this.board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   this.rows = this.board.match(/.{1,4}/g)
   this.columns = generateColumns()
 }
@@ -69,10 +69,10 @@ Game.prototype.shiftNumbers = function(rowOrColumn) {
   var newColumn = []
   rowOrColumn.forEach(value, index) {
     var gotAllZeroes = false
-    if (value === "0" && gotAllZeroes === false) {
+    if (value === 0 && gotAllZeroes === false) {
       zeroes.push(value)
     }
-    else if (value === "0" && gotAllZeroes === true) {
+    else if (value === 0 && gotAllZeroes === true) {
       newColumn.unshift(value)
     }
     else {
@@ -81,7 +81,7 @@ Game.prototype.shiftNumbers = function(rowOrColumn) {
     }
   }
   for (var i = 0; i < zeroes.length(); i++) {
-    newColumn.unshift('0')
+    newColumn.unshift(0)
   }
   return newColumn
 }
@@ -95,4 +95,26 @@ Game.prototype.makeBoardFromColumns = function(columns) {
     })
     rows.push(row)
   }
+}
+
+
+
+Game.prototype.collapse = function(row) {
+  var zeroLessRow = _.reject(row, function(num){ return num === 0 })
+  var finalRow = [];
+  for(var i = 0; i < zeroLessRow.length; i++){
+    if(zeroLessRow[i] === zeroLessRow[i+1]){
+      zeroLessRow[i+1] = zeroLessRow[i+1] + zeroLessRow[i+1]
+      finalRow.push(zeroLessRow[i+1])
+      zeroLessRow[i] = 0
+      i++
+      }
+      else if(zeroLessRow[i] != 0) {
+        finalRow.push(zeroLessRow[i])
+      }
+    }
+  while(finalRow.length < row.length) {
+    finalRow.unshift(0)
+  }
+  return finalRow
 }
