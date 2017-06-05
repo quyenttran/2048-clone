@@ -21,13 +21,22 @@ function Game(board = generateBoard()) {
 }
 
 Game.prototype.toString = function() {
-  this.substring(0,3)
-}
-
-Game.prototype.toString = function() {
   newString = ""
   for (var i = 0; i < this.board.length; i += 4) {
     newString += (this.board.substring(i,i+4) + "\n")
   }
   return newString;
+}
+
+Game.prototype.getRow = function(rowNumber) {
+  var maxPosition = (rowNumber * 4) - 1
+  var rowString = ""
+  for (var i = maxPosition; i > maxPosition-4; i--) {
+    rowString += this.board[i]
+  }
+  var array = rowString.split("").reverse();
+  for (var j=0; j < array.length; j++) {
+    array[j] = parseInt(array[j]);
+  }
+  return array;
 }
