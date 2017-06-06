@@ -13,7 +13,7 @@ function shuffle(array) {
 function generateBoard() {
   var string = "2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
   var array = string.split(",")
-  return shuffle(array).join("")
+  return shuffle(array)
 }
 
 function transpose(board) {
@@ -24,7 +24,7 @@ function transpose(board) {
       newBoard += board[i+8]
       newBoard += board[i+12]
     }
-  return newBoard;
+  return newBoard.split("");
 }
 
 function Game(board = generateBoard()) {
@@ -33,20 +33,22 @@ function Game(board = generateBoard()) {
 }
 
 Game.prototype.toString = function() {
-  newString = ""
-  for (var i = 0; i < this.board.length; i += 4) {
-    newString += (this.board.substring(i,i+4) + "\n")
-  }
-  return newString;
+  var newString = ""
+  newString += this.board.slice(0,4).join("") + "\n"
+  newString += this.board.slice(4,8).join("") + "\n"
+  newString += this.board.slice(8,12).join("") + "\n"
+  newString += this.board.slice(12,16).join("") + "\n"
+  return newString
 }
+
 
 Game.prototype.getRow = function(rowNumber) {
   var maxPosition = (rowNumber * 4) - 1
-  var rowString = ""
+  var rowString = []
   for (var i = maxPosition; i > maxPosition-4; i--) {
-    rowString += this.board[i]
+    rowString.push(this.board[i])
   }
-  var array = rowString.split("").reverse();
+  var array = rowString.reverse();
   for (var j=0; j < array.length; j++) {
     array[j] = parseInt(array[j]);
   }
@@ -55,11 +57,11 @@ Game.prototype.getRow = function(rowNumber) {
 
 Game.prototype.getColumn = function(colNumber) {
   var maxPosition = (colNumber * 4) - 1
-  var colString = ""
+  var colString = []
   for (var i = maxPosition; i > maxPosition-4; i--) {
-    colString += this.transposedBoard[i]
+    colString.push(this.transposedBoard[i])
   }
-  var array = colString.split("").reverse();
+  var array = colString.reverse();
   for (var j=0; j < array.length; j++) {
     array[j] = parseInt(array[j]);
   }
@@ -109,53 +111,54 @@ function moveUp(col) {
 }
 
 Game.prototype.allUp = function() {
-  var newBoardString = ""
+  var newBoardString = []
   for (var i = 1; i <= 4; i++) {
-    newBoardString += moveUp(this.getColumn(i)).join("")
+    newBoardString = newBoardString.concat(moveUp(this.getColumn(i)))
   }
   return newBoardString;
 }
 
 Game.prototype.allDown = function() {
-  var newBoardString = ""
+  var newBoardString = []
   for (var i = 1; i <= 4; i++) {
-    newBoardString += moveDown(this.getColumn(i)).join("")
+    newBoardString = newBoardString.concat(moveDown(this.getColumn(i)))
   }
   return newBoardString;
 }
 
 Game.prototype.allLeft = function() {
-  var newBoardString = ""
+  var newBoardString = []
   for (var i = 1; i <= 4; i++) {
-    newBoardString += moveLeft(this.getRow(i)).join("")
+    newBoardString = newBoardString.concat(moveLeft(this.getRow(i)))
   }
   return newBoardString;
 }
 
 Game.prototype.allRight = function() {
-  var newBoardString = ""
+  var newBoardString = []
   for (var i = 1; i <= 4; i++) {
-    newBoardString += moveRight(this.getRow(i)).join("")
+    newBoardString = newBoardString.concat(moveRight(this.getRow(i)))
   }
   return newBoardString;
 }
 
 Game.prototype.move = function(direction) {
   if (direction === 'up') {
-    return transpose(this.allUp());
+    this.board = this.allUp();
   } else if (direction === 'down') {
-    return transpose(this.allDown());
+    this.board = this.allDown();
   } else if (direction === 'left') {
-    return this.allLeft();
+    this.board = this.allLeft();
   } else {
-    return this.allRight();
+    this.board = this.allRight();
   }
+  return this.board;
 }
 
 Game.prototype.determineNumber = function() {
   for (var i = 1; i <= 11; i++) {
     if (this.board.includes(Math.pow(2,i).toString())) {
-      return Math.pow(2,i)
+      return Math.pow(2,i).toString();
     }
   }
 }
@@ -164,22 +167,23 @@ function rand(myArray) {
   return myArray[Math.floor(Math.random() * myArray.length)];
 }
 
-function randomIndex(string) {
+function randomIndex(array) {
   var indices = [];
-  for(var i=0; i<string.length;i++) {
-    if (string[i] === "0") indices.push(i);
+  for(var i=0; i<array.length;i++) {
+    if (array[i] === "0") {indices.push(i)};
     }
   return rand(indices);
 }
 
 Game.prototype.randomAdd = function() {
   var position = randomIndex(this.board);
-  this.board = this.board.substr(0, position) + this.determineNumber() + this.board.substr(position + 1)
+  console.log(position)
+  this.board[position] = this.determineNumber()
   return this.board;
 }
 
 Game.prototype.display = function() {
-  this.board.split("").forEach(function(number, index) {
+  this.board.forEach(function(number, index) {
     var indexString = index.toString();
     $(".board").find(".cell-" + indexString).html(number)
   })
