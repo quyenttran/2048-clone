@@ -3,6 +3,8 @@ body {
   font-size: 32px;
   font-weight: bolder;
   color: white;
+  display: flex;
+  justify-content: space-around;
 }
 
 div.cell {

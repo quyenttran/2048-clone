@@ -67,11 +67,16 @@ Game.prototype.move = function(direction) {
       break;
   }
   console.log(this.noRight)
-  if (this.noLeft === true && this.noRight === true && this.noUp === true && this.noDown === true)
+  if (this.noLeft && this.noRight && this.noUp && this.noDown )
     alert("You suck")
 
-  if (!arrayEqual(this.board, originalBoard))
+  if (!arrayEqual(this.board, originalBoard)) {
     this.spawnBlock();
+    this.noUp = false;
+    this.noDown = false;
+    this.noRight = false;
+    this.noLeft = false;
+  }
 
   this.visualizeBoard()
 
