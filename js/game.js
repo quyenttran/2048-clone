@@ -66,7 +66,6 @@ Game.prototype.move = function(direction) {
       this.moveLeft(this.board);
       break;
   }
-  console.log(this.noRight)
   if (this.noLeft && this.noRight && this.noUp && this.noDown )
     alert("You suck")
 
@@ -77,6 +76,7 @@ Game.prototype.move = function(direction) {
     this.noRight = false;
     this.noLeft = false;
   }
+
 
   this.visualizeBoard()
 
@@ -108,7 +108,6 @@ Game.prototype.moveDown = function(board) {
   var cols = makeCols(board);
   var newBoard = [];
   var newerBoard = [];
-  console.log("cols are " + cols)
   for (var i = 0; i < 4; i++) {
     newBoard.push(collapseAndAdd(cols[i]));
   }
@@ -124,7 +123,6 @@ Game.prototype.moveUp = function(board) {
   var cols = makeCols(board);
   var newBoard = [];
   var newerBoard = [];
-  console.log("cols are " + cols)
   for (var i = 0; i < 4; i++) {
     var reversedCol = (cols[i].reverse())
     newBoard.push(collapseAndAdd(cols[i]));
@@ -227,11 +225,43 @@ var arrayEqual = function(arr1, arr2) {
 Game.prototype.visualizeBoard = function() {
   $board = $('.board')
   this.board.forEach(function(cell, index) {
-    console.log(cell)
     cellClass = 'div.cell' + index
     $(cellClass).html(cell)
   })
+    updateColors();
+
 }
+
+  var updateColors = function() {
+    var allCells = document.getElementsByClassName("cell")
+    for (var i = 0; i < allCells.length; i++) {
+      var $node = $(".cell" + i);
+      var value = $node.text();
+      console.log(value)
+      if (value === "2") {
+        $(".cell" + i).css("background-color", "#ff8656");
+      } else if (value === "4") {
+        $(".cell" + i).css("background-color", "#ffc956");
+      } else if (value === "8") {
+        $(".cell" + i).css("background-color", "#f3ff56");
+      } else if (value === "16") {
+        $(".cell" + i).css("background-color", "#9fff56");
+      } else if (value === "32") {
+        $(".cell" + i).css("background-color", "#56ff83");
+      } else if (value === "64") {
+        $(".cell" + i).css("background-color", "#56ffcc");
+      } else if (value === "128") {
+        $(".cell" + i).css("background-color", "#56d1ff");
+      } else if (value === "256") {
+        $(".cell" + i).css("background-color", "#5672ff");
+      } else if (value === "512") {
+        $(".cell" + i).css("background-color", "#b256ff");
+      } else {
+        $(".cell" + i).css("background-color", "black");
+      }
+  }
+}
+
 
 newGame = new Game();
 newGame.board = makeBoard();
