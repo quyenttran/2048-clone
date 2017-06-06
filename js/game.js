@@ -1,6 +1,6 @@
 var Game = function() {
 
-  this.board = [0,0,0,2,0,0,2,2,0,2,0,2,2,0,0,2]
+  this.board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   this.rows = this.generateRows()
   this.columns = this.generateColumns()
 }
@@ -69,6 +69,7 @@ this.regenerateBoardFromColumns(this.columns)
 
 Game.prototype.regenerateBoardFromRows = function(rows) {
   this.board = _.flatten(this.rows)
+  this.assignValue()
   this.rows = this.generateRows()
   this.columns = this.generateColumns()
   this.visualizeBoard()
@@ -84,9 +85,24 @@ Game.prototype.regenerateBoardFromColumns = function(columns) {
     newRows.push(row)
   }
   this.board = _.flatten(newRows)
+  this.assignValue()
   this.rows = this.generateRows()
   this.columns = this.generateColumns()
   this.visualizeBoard()
+}
+
+Game.prototype.assignValue = function() {
+  var randomNumberArray = []
+  this.board.forEach(function(value, index) {
+    if(value === 0){
+      randomNumberArray.push(index)
+    }
+  })
+  this.board[(_.sample(randomNumberArray))] = this.randomNumber()
+}
+
+Game.prototype.randomNumber = function(){
+  return _.sample([2,2,2,2,2,2,2,2,2,2,4])
 }
 
 Game.prototype.collapse = function(row) {
