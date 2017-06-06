@@ -1,25 +1,34 @@
 body {
   font-family: 'Futura';
-  font-size: 32px;
+  font-size: 42px;
   font-weight: bolder;
-  color: white;
+  color: darkred;
+}
+
+div {
+  box-sizing: border-box;
 }
 
 div.cell {
-  background-color: mediumseagreen;
+  background-color: darkgrey;
   display: inline-block;
-  border: solid 2px black;
   width: 100px;
   height: 100px;
   padding: 10px;
   box-sizing: border-box;
 }
 div.board {
-  background-color: seagreen;
+  background-color: lightgrey;
   width: 500px;
   height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 div.row {
   width: 500px;
-  height: 125px;
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
 }
+
