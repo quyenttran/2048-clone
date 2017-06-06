@@ -142,13 +142,13 @@ Game.prototype.allRight = function() {
 
 Game.prototype.move = function(direction) {
   if (direction === 'up') {
-    this.allUp();
+    return transpose(this.allUp());
   } else if (direction === 'down') {
-    this.allDown();
+    return transpose(this.allDown());
   } else if (direction === 'left') {
-    this.allLeft();
+    return this.allLeft();
   } else {
-    this.allRight();
+    return this.allRight();
   }
 }
 
@@ -176,6 +176,13 @@ Game.prototype.randomAdd = function() {
   var position = randomIndex(this.board);
   this.board = this.board.substr(0, position) + this.determineNumber() + this.board.substr(position + 1)
   return this.board;
+}
+
+Game.prototype.display = function() {
+  this.board.split("").forEach(function(number, index) {
+    var indexString = index.toString();
+    $(".board").find(".cell-" + indexString).html(number)
+  })
 }
 
 
