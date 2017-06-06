@@ -2,8 +2,24 @@ Mousetrap.bind('up', function() {
   newGame.move("up");
 })
 
+Mousetrap.bind('down', function() {
+  newGame.move("down");
+})
+
+Mousetrap.bind('left', function() {
+  newGame.move("left");
+})
+
+Mousetrap.bind('right', function() {
+  newGame.move("right");
+})
+
 function Game(tiles) {
   this.board = tiles || makeBoard();
+  this.noLeft = false;
+  this.noRight = false;
+  this.noUp = false;
+  this.noDown = false;
 }
 
 Game.prototype.toString = function() {
@@ -19,21 +35,46 @@ Game.prototype.move = function(direction) {
   switch(direction) {
     case "up":
       this.moveUp(this.board);
+      if (arrayEqual(this.board, originalBoard)) {
+        this.noUp = true
+      } else {
+        this.noUp = false;
+      }
       break;
     case "right":
       this.moveRight(this.board);
+      if (arrayEqual(this.board, originalBoard)) {
+        this.noRight = true
+      } else {
+        this.noRight = false;
+      }
       break;
     case "down":
+      if (arrayEqual(this.board, originalBoard)) {
+        this.noDown = true
+      } else {
+        this.noDown = false;
+      }
       this.moveDown(this.board);
       break;
     case "left":
+      if (arrayEqual(this.board, originalBoard)) {
+        this.noLeft = true
+      } else {
+        this.noLeft = false;
+      }
       this.moveLeft(this.board);
       break;
   }
-  if (this.board !== originalBoard)
+  console.log(this.noRight)
+  if (this.noLeft === true && this.noRight === true && this.noUp === true && this.noDown === true)
+    alert("You suck")
+
+  if (!arrayEqual(this.board, originalBoard))
     this.spawnBlock();
 
-  console.log(direction + this.toString());
+  this.visualizeBoard()
+
 }
 
 Game.prototype.moveRight = function(board) {
@@ -168,25 +209,26 @@ var makeBoard = function() {
   return board
 }
 
+var arrayEqual = function(arr1, arr2) {
+    if(arr1.length !== arr2.length)
+        return false;
+    for(var i = arr1.length; i--;) {
+        if(arr1[i] !== arr2[i])
+            return false;
+    }
+    return true;
+}
+
+Game.prototype.visualizeBoard = function() {
+  $board = $('.board')
+  this.board.forEach(function(cell, index) {
+    console.log(cell)
+    cellClass = 'div.cell' + index
+    $(cellClass).html(cell)
+  })
+}
+
 newGame = new Game();
 newGame.board = makeBoard();
-newGame.move("right")
-newGame.move("right")
-newGame.move("right")
-newGame.move("left")
-newGame.move("left")
-newGame.move("left")
-newGame.move("left")
-console.log("first down")
-newGame.move("down")
-newGame.move("down")
-newGame.move("down")
-console.log("first up")
-newGame.move("up")
-newGame.move("up")
-newGame.move("up")
-newGame.toString();
+newGame.visualizeBoard();
 
-
-
-console.log(collapseAndAdd([4, 4, 4, 2]))
